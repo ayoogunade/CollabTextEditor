@@ -6,7 +6,7 @@ function App(){
   const [socket, setSocket] = useState(null);
 
   useEffect(()=>{
-    const newSocket = new WebSocket('https://collabtexteditor.onrender.com');
+    const newSocket = new WebSocket('wss://collabtexteditor.onrender.com');
     setSocket(newSocket);
 
     newSocket.onopen = () =>{
