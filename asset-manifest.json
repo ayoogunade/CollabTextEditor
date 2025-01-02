@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/CollabTextEditor/static/css/main.3b28d099.css",
+    "main.js": "/CollabTextEditor/static/js/main.528b6850.js",
+    "static/js/156.e35abe09.chunk.js": "/CollabTextEditor/static/js/156.e35abe09.chunk.js",
+    "index.html": "/CollabTextEditor/index.html",
+    "main.3b28d099.css.map": "/CollabTextEditor/static/css/main.3b28d099.css.map",
+    "main.528b6850.js.map": "/CollabTextEditor/static/js/main.528b6850.js.map",
+    "156.e35abe09.chunk.js.map": "/CollabTextEditor/static/js/156.e35abe09.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3b28d099.css",
+    "static/js/main.528b6850.js"
+  ]
+}
