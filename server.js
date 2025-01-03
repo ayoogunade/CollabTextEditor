@@ -5,17 +5,25 @@ const cors = require('cors');
 
 const app = express();
 
-// CORS configuration
+// CORS configuration with specific path
 const corsOptions = {
-  origin: 'https://ayoogunade.github.io/CollabTextEditor/', // In production, you should specify your GitHub Pages URL
+  origin: 'https://ayoogunade.github.io/CollabTextEditor',  // Specific to your text editor app
   methods: ['GET', 'POST'],
   credentials: true
 };
 
 app.use(cors(corsOptions));
 
+// Add a test route
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
+
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ 
+  server,
+  path: '/',  // Explicitly set the WebSocket path
+});
 
 let doc = "";
 
@@ -44,7 +52,6 @@ wss.on('connection', (ws) => {
         console.log('Client disconnected');
     });
 
-    // Add error handler
     ws.on('error', (error) => {
         console.error('WebSocket error:', error);
     });

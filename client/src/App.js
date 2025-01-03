@@ -7,9 +7,11 @@ function App() {
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
 
   useEffect(() => {
-    // Using your Render backend URL
-    const BACKEND_URL = 'collabtexteditor.onrender.com';
-    const newSocket = new WebSocket(`wss://${BACKEND_URL}`);
+    // Define the WebSocket URL based on environment
+    const BACKEND_URL = 'wss://collabtexteditor.onrender.com';
+    console.log('Attempting to connect to:', BACKEND_URL); // Debug log
+    
+    const newSocket = new WebSocket(BACKEND_URL);
     
     newSocket.onopen = () => {
       console.log('WebSocket connection established');
