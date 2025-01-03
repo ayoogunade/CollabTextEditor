@@ -60,7 +60,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Collaborative Editor</h1>
+      <h1>Collaborative </h1>
       <div className={`status-indicator ${connectionStatus}`}>
         Connection Status: {connectionStatus}
       </div>
