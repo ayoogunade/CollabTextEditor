@@ -4,41 +4,53 @@ const WebSocket = require('ws');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
 
+// CORS configuration
+const corsOptions = {
+  origin: 'https://ayoogunade.github.io/CollabTextEditor/', // In production, you should specify your GitHub Pages URL
+  methods: ['GET', 'POST'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({server});
+const wss = new WebSocket.Server({ server });
 
 let doc = "";
 
 wss.on('connection', (ws) => {
     console.log('New Client connected');
-
-    ws.send(JSON.stringify({type: 'init', data: doc}));
-
-    ws.on('message',(message)=>{
+    
+    ws.send(JSON.stringify({ type: 'init', data: doc }));
+    
+    ws.on('message', (message) => {
         try {
             const parsedMessage = JSON.parse(message);
-            if (parsedMessage.type === 'update'){
+            if (parsedMessage.type === 'update') {
                 doc = parsedMessage.data;
                 wss.clients.forEach((client) => {
-                    if (client.readyState === WebSocket.OPEN){
-                        client.send(JSON.stringify({type:'update', data:doc}));
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify({ type: 'update', data: doc }));
                     }
                 });
             }
-        } catch (error){
-            console.error('Error pasing message: ',error);
+        } catch (error) {
+            console.error('Error parsing message: ', error);
         }
     });
-    ws.on('close',()=>{
+    
+    ws.on('close', () => {
         console.log('Client disconnected');
+    });
+
+    // Add error handler
+    ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
     });
 });
 
 const PORT = process.env.PORT || 5005;
 server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+    console.log(`Server is listening on port ${PORT}`);
 });
-

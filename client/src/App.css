@@ -18,3 +18,24 @@ border: 1px solid #ccc;
 border-radius: 5px;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.status-indicator {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  
+  .status-indicator.connected {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .status-indicator.disconnected {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .status-indicator.error {
+    background-color: #ff9800;
+    color: white;
+  }
