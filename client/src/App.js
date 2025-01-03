@@ -7,12 +7,15 @@ function App() {
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
 
   useEffect(() => {
-    // Define the WebSocket URL based on environment
-    const BACKEND_URL = 'wss://collabtexteditor.onrender.com';
-    console.log('Attempting to connect to:', BACKEND_URL); // Debug log
-    
+    const BACKEND_URL = process.env.NODE_ENV === 'development'
+      ? 'ws://localhost:5001/ws'
+      : 'wss://collabtexteditor.onrender.com/ws';
+
+    console.log('Connecting to WebSocket:', BACKEND_URL);
+
     const newSocket = new WebSocket(BACKEND_URL);
-    
+    setSocket(newSocket);
+
     newSocket.onopen = () => {
       console.log('WebSocket connection established');
       setConnectionStatus('connected');
@@ -32,11 +35,6 @@ function App() {
     newSocket.onclose = (event) => {
       console.log('WebSocket connection closed', event.code, event.reason);
       setConnectionStatus('disconnected');
-      
-      // Attempt to reconnect after 5 seconds
-      setTimeout(() => {
-        setSocket(null);
-      }, 5000);
     };
 
     newSocket.onerror = (error) => {
@@ -44,10 +42,8 @@ function App() {
       setConnectionStatus('error');
     };
 
-    setSocket(newSocket);
-
     return () => {
-      if (newSocket && newSocket.readyState === WebSocket.OPEN) {
+      if (newSocket.readyState === WebSocket.OPEN) {
         newSocket.close();
       }
     };
@@ -56,14 +52,9 @@ function App() {
   const handleChange = (e) => {
     const newDocument = e.target.value;
     setDocument(newDocument);
-    
+
     if (socket && socket.readyState === WebSocket.OPEN) {
-      try {
-        socket.send(JSON.stringify({ type: 'update', data: newDocument }));
-      } catch (error) {
-        console.error('Error sending update:', error);
-        setConnectionStatus('error');
-      }
+      socket.send(JSON.stringify({ type: 'update', data: newDocument }));
     }
   };
 
@@ -78,7 +69,6 @@ function App() {
         onChange={handleChange}
         rows="20"
         cols="80"
-        placeholder="Start typing here..."
         disabled={connectionStatus !== 'connected'}
       />
     </div>
