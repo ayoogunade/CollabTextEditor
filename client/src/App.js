@@ -8,8 +8,8 @@ function App() {
 
   useEffect(() => {
     const BACKEND_URL = process.env.NODE_ENV === 'development'
-      ? 'ws://localhost:5001/ws'
-      : 'wss://collabtexteditor.onrender.com/ws';
+      ? 'ws://localhost:5005'
+      : 'wss://collabtexteditor.onrender.com';
 
     console.log('Connecting to WebSocket:', BACKEND_URL);
 
@@ -35,6 +35,11 @@ function App() {
     newSocket.onclose = (event) => {
       console.log('WebSocket connection closed', event.code, event.reason);
       setConnectionStatus('disconnected');
+      
+      // Attempt to reconnect after 5 seconds
+      setTimeout(() => {
+        setSocket(null);
+      }, 5000);
     };
 
     newSocket.onerror = (error) => {
@@ -43,7 +48,7 @@ function App() {
     };
 
     return () => {
-      if (newSocket.readyState === WebSocket.OPEN) {
+      if (newSocket && newSocket.readyState === WebSocket.OPEN) {
         newSocket.close();
       }
     };
@@ -54,13 +59,18 @@ function App() {
     setDocument(newDocument);
 
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ type: 'update', data: newDocument }));
+      try {
+        socket.send(JSON.stringify({ type: 'update', data: newDocument }));
+      } catch (error) {
+        console.error('Error sending update:', error);
+        setConnectionStatus('error');
+      }
     }
   };
 
   return (
     <div className="App">
-      <h1>Collaborative </h1>
+      <h1>Collaborative Editor</h1>
       <div className={`status-indicator ${connectionStatus}`}>
         Connection Status: {connectionStatus}
       </div>
@@ -69,6 +79,7 @@ function App() {
         onChange={handleChange}
         rows="20"
         cols="80"
+        placeholder="Start typing here..."
         disabled={connectionStatus !== 'connected'}
       />
     </div>

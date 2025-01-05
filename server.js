@@ -5,11 +5,13 @@ const cors = require('cors');
 
 const app = express();
 
-// CORS configuration
+// CORS configuration with all necessary origins
 const corsOptions = {
   origin: [
-    'https://collabtexteditor.onrender.com',
+    'https://ayoogunade.github.io',
+    'https://ayoogunade.github.io/CollabTextEditor',
     'http://localhost:3000',
+    'https://collabtexteditor.onrender.com'
   ],
   methods: ['GET', 'POST'],
   credentials: true,
@@ -17,15 +19,15 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// HTTP route
+// HTTP route for testing
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
 const server = http.createServer(app);
 
-// WebSocket Server with explicit path
-const wss = new WebSocket.Server({ server, path: '/ws' });
+// WebSocket Server without explicit path (remove path restriction)
+const wss = new WebSocket.Server({ server });
 
 let doc = "";
 
